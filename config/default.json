@@ -1,0 +1,24 @@
+{
+    "enableRest": true,
+    "enableRestApiDocs": true,
+    "restPort": 5099,
+    "restCacheControl": {
+        "maxAge": 1,
+        "public": false
+    },
+    "enableRestSSL" : false,
+    "sslCert" : {
+        "cert" : "/path/to/cert.crt",
+        "key" : "/path/to/cert.key"
+    },
+    "restHeaders": [
+        { "name": "X-Powered-By", "value": "TracCore" },
+        { "name": "Access-Control-Allow-Origin", "value": "*" }
+    ],
+    "enableWebsockets": true,
+    "websocketPort": 5095,
+    "websocketCORS": "*",
+    "channel": "2c889bcadebbfd621d080bedcf9393178bce2949e18acb2b54fb7bc85775edc1",
+    "enableBlockDownloader": false,
+    "host" : "0.0.0.0"
+}
