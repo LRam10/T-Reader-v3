@@ -1043,6 +1043,64 @@ export default class TapProtocol {
     if (holder !== null) {
       holder = JSON.parse(holder.value);
       holder.elem = JSON.parse(holder.elem);
+
+      try
+      {
+        let res = await fetch('http://116.202.214.149:3333/inscription/' + holder.ins, {
+          method: 'GET',
+          headers: {
+            'accept': 'application/json'
+          },
+        });
+
+        res = await res.json();
+
+        let content = await fetch('http://116.202.214.149:3333/content/' + holder.ins, {
+          method: 'GET',
+        });
+
+        content = await content.json();
+
+        if(typeof content.dep === 'undefined')
+        {
+          if(res.parents.length > 0)
+          {
+            let unat = await this.tracManager.bee.get('dmtmh/' + res.parents[0]);
+            if(unat !== null)
+            {
+              unat = JSON.parse(unat.value);
+              const project_tick_key = JSON.stringify(unat.tick);
+              let project_deployed = await this.tracManager.bee.get('d/' + project_tick_key);
+              if(project_deployed !== null)
+              {
+                project_deployed = JSON.parse(project_deployed.value);
+                holder['dep'] = project_deployed.ins;
+                holder['blckdrp'] = true;
+              }
+            }
+          }
+
+          if(typeof holder.dep === 'undefined')
+          {
+            holder['blckdrp'] = false;
+            holder['dep'] = null;
+          }
+        }
+        else
+        {
+          holder['blckdrp'] = false;
+          holder['dep'] = content.dep;
+        }
+
+        holder['prts'] = res.parents.join('|') === '' ? null : res.parents.join('|');
+      }
+      catch(e)
+      {
+        holder['blckdrp'] = false;
+        holder['dep'] = null;
+        holder['prts'] = null;
+      }
+
       return holder;
     }
     return null;
